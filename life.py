@@ -8,3 +8,4 @@ class Life:
     def born(self):
         new_life = Life()
         new_life.gen = self.gen.mutation()
+        return new_life
