@@ -17,7 +17,7 @@ class Field:
                 Field.cells[(row, col)] = cell
         for _ in range(config.START_LIFE_CELLS):
             cell = self.random_cell()
-            cell.life_forms.append(Life())
+            cell.life_forms = Life()
             Field.life_cells[cell.position] = cell
 
     @staticmethod
