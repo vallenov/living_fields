@@ -19,8 +19,6 @@ class Field:
             cell = self.random_cell()
             cell.life_forms.append(Life())
             Field.life_cells[cell.position] = cell
-        rand_cell_key = random.choice(list(Field.life_cells.keys()))
-        print(Field.life_cells[rand_cell_key].life_forms[0].born())
 
     @staticmethod
     def random_cell():
