@@ -12,9 +12,10 @@ SPRITE = {
 
 class BaseCell:
     def __init__(self, position: tuple):
-        self.position = position
-        self.look = SPRITE['empty']
+        self.position: Optional[tuple] = position
+        self.look: Optional[str] = SPRITE['empty']
         self.life_forms: Optional[Life] = None
+        self.neighbours: Optional[list] = []
 
     def __repr__(self):
         return f'{self.__class__}'
