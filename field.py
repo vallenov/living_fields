@@ -16,9 +16,13 @@ class Field:
                 cell = BaseCell((row, col))
                 Field.cells[(row, col)] = cell
         for _ in range(config.START_LIFE_CELLS):
-            cell = self.random_cell()
-            cell.life_forms = Life()
-            Field.life_cells[cell.position] = cell
+            Field.born_random_cell()
+
+    @staticmethod
+    def born_random_cell():
+        cell = Field.random_cell()
+        cell.life_forms = Life()
+        Field.life_cells[cell.position] = cell
 
     @staticmethod
     def random_cell():
