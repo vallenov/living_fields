@@ -24,7 +24,6 @@ class Field:
 
     @staticmethod
     def add_neighbours(position: tuple):
-        print(position)
         cur_c = position[0] - 1
         cur_r = position[1] - 1
         neighbours = []
