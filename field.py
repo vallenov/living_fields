@@ -36,7 +36,6 @@ class Field:
                 cur_c = position[0] - 1
             else:
                 cur_c += 1
-        print([cell.position for cell in neighbours])
         return neighbours
 
     @staticmethod
