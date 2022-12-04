@@ -1,6 +1,5 @@
 import random
 import os
-from time import sleep
 
 import config
 
@@ -40,23 +39,23 @@ class Field:
     @staticmethod
     def born_random_cell():
         cell = Field.random_cell()
-        cell.life_forms = Life()
+        cell.life_form = Life()
         Field.life_cells[cell.position] = cell
 
     @staticmethod
     def random_cell():
         return Field.cells[(
-            random.randint(0, config.H_FIELD_SIZE-1),
-            random.randint(0, config.W_FIELD_SIZE-1)
+            random.randint(0, config.W_FIELD_SIZE-1),
+            random.randint(0, config.H_FIELD_SIZE-1)
         )]
 
     @staticmethod
     def draw():
-        #os.system('clear')
+        os.system('clear')
         frame = ''
         frame += '_' * (config.W_FIELD_SIZE * 2) + '\n'
         for row in range(config.H_FIELD_SIZE):
-            frame += '|' + ' '.join([str(Field.cells[(row, col)]) for col in range(config.W_FIELD_SIZE)]) + '|' + '\n'
+            frame += '|' + ' '.join([str(Field.cells[(col, row)]) for col in range(config.W_FIELD_SIZE)]) + '|' + '\n'
         frame += '_' * (config.W_FIELD_SIZE * 2) + '\n'
         print(frame)
 
@@ -67,10 +66,19 @@ class Field:
 
     @staticmethod
     def run():
+        flag = 0
+        buffer = list(Field.life_cells.values())
         while True:
-            for living_cell in Field.life_cells:
-                pass
-
-            Field.draw()
-            sleep(1)
+            current_cell = buffer.pop(0)
+            rand_neighbour = random.choice(current_cell.neighbours)
+            if rand_neighbour.life_form:
+                buffer.append(current_cell)
+                continue
+            buffer.append(rand_neighbour)
+            Field.cells[rand_neighbour.position].life_form = current_cell.life_form
+            Field.cells[current_cell.position].life_form = None
+            if flag == 100000:
+                Field.draw()
+                flag = 0
+            flag += 1
 
