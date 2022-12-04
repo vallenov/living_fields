@@ -24,9 +24,6 @@ class BaseCell:
     def __str__(self):
         if self.life_form:
             self.look = SPRITE['life']
+        else:
+            self.look = SPRITE['empty']
         return self.look
-
-    def move(self):
-        rand_neighbour = random.choice(self.neighbours)
-        rand_neighbour.life_form = self.life_form
-        self.life_form = None
