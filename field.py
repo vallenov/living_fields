@@ -9,7 +9,7 @@ from life import Life
 
 class Field:
     cells: dict = {}
-    life_cells = {}
+    life_cells: dict = {}
 
     def __init__(self):
         for row in range(config.H_FIELD_SIZE):
