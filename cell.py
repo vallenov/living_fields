@@ -1,5 +1,5 @@
 import random
-from typing import Optional
+from typing import Optional, Any
 from life import Life
 
 
@@ -15,15 +15,16 @@ class BaseCell:
     def __init__(self, position: tuple):
         self.position: Optional[tuple] = position
         self.look: Optional[str] = SPRITE['empty']
-        self.life_form: Optional[Life] = None
+        self.content: Optional[Any] = None
         self.neighbours: Optional[list] = []
 
     def __repr__(self):
         return f'{self.__class__}'
 
     def __str__(self):
-        if self.life_form:
-            self.look = SPRITE['life']
-        else:
+        if not self.content:
             self.look = SPRITE['empty']
+
+        else:
+            self.look = self.content.sprite
         return self.look

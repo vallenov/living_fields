@@ -1,15 +1,17 @@
 import random
 import os
+from time import sleep
 
 import config
 
 from cell import BaseCell
-from life import Life
+from life import Life, Food
 
 
 class Field:
     cells: dict = {}
     life_cells: dict = {}
+    food: dict = {}
 
     def __init__(self):
         for row in range(config.H_FIELD_SIZE):
@@ -20,6 +22,8 @@ class Field:
             cell.neighbours = Field.add_neighbours(position)
         for _ in range(config.START_LIFE_CELLS):
             Field.born_random_cell()
+        for _ in range(config.START_FOOD):
+            Field.born_random_food()
 
     @staticmethod
     def add_neighbours(position: tuple):
@@ -37,9 +41,15 @@ class Field:
         return neighbours
 
     @staticmethod
+    def born_random_food():
+        cell = Field.random_cell()
+        cell.content = Food()
+        Field.food[cell.position] = cell
+
+    @staticmethod
     def born_random_cell():
         cell = Field.random_cell()
-        cell.life_form = Life()
+        cell.content = Life()
         Field.life_cells[cell.position] = cell
 
     @staticmethod
@@ -60,25 +70,33 @@ class Field:
         print(frame)
 
     @staticmethod
-    def _print():
-        for key, val, in Field.cells.items():
-            print(key, val)
-
-    @staticmethod
     def run():
         flag = 0
         buffer = list(Field.life_cells.values())
         while True:
-            current_cell = buffer.pop(0)
-            rand_neighbour = random.choice(current_cell.neighbours)
-            if rand_neighbour.life_form:
-                buffer.append(current_cell)
-                continue
-            buffer.append(rand_neighbour)
-            Field.cells[rand_neighbour.position].life_form = current_cell.life_form
-            Field.cells[current_cell.position].life_form = None
-            if flag == 100000:
+            if flag == len(buffer):
                 Field.draw()
                 flag = 0
+                sleep(0.1)
+            print(buffer)
+            current_cell = buffer.pop(0)
+            current_cell.content.gen.start_energy.value -= 1
+            if not current_cell.content.gen.start_energy.value:
+                Field.cells[current_cell.position].content = None
+                continue
+            neighbour_food = [cell for cell in current_cell.neighbours if isinstance(cell, Food)]
+            rand_neighbour = None
+            if neighbour_food:
+                rand_neighbour = random.choice(neighbour_food)
+            if not rand_neighbour:
+                rand_neighbour = random.choice(current_cell.neighbours)
+            if isinstance(rand_neighbour.content, Life):
+                buffer.append(current_cell)
+                continue
+            elif isinstance(rand_neighbour.content, Food):
+                current_cell.content.gen.start_energy.value += 100
+                buffer.append(rand_neighbour)
+            Field.cells[rand_neighbour.position].content = current_cell.content
+            Field.cells[current_cell.position].content = None
             flag += 1
 
